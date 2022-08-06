@@ -2,8 +2,8 @@
 #include "Walnut/EntryPoint.h"
 
 #include "Walnut/Image.h"
-#include "Walnut/Random.h"
 #include "Walnut/Timer.h"
+
 #include "Renderer.h"
 
 using namespace Walnut;
@@ -19,6 +19,13 @@ public:
 		{
 			Render();
 		}
+
+		glm::vec3 lightDir = m_Renderer.GetLightDirection();
+		if (ImGui::DragFloat3("Light Direction", &lightDir[0], 0.1f))
+		{
+			m_Renderer.SetLightDirection(lightDir);
+		}
+
 		ImGui::End();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
@@ -28,9 +35,9 @@ public:
 		m_ViewportHeight = ImGui::GetContentRegionAvail().y;
 
 		auto image = m_Renderer.GetFinalImage();
-
 		if (image)
-			ImGui::Image(image->GetDescriptorSet(), { (float)image->GetWidth(), (float)image->GetHeight() }, ImVec2(0,1), ImVec2(1,0));
+			ImGui::Image(image->GetDescriptorSet(), { (float)image->GetWidth(), (float)image->GetHeight() },
+				ImVec2(0, 1), ImVec2(1, 0));
 
 		ImGui::End();
 		ImGui::PopStyleVar();
@@ -47,12 +54,14 @@ public:
 
 		m_LastRenderTime = timer.ElapsedMillis();
 	}
-
 private:
 	Renderer m_Renderer;
 	uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
 
 	float m_LastRenderTime = 0.0f;
+
+	// TEMP VARIABLES
+	glm::vec3 m_LightDirection = glm::vec3(-1.0f);
 };
 
 Walnut::Application* Walnut::CreateApplication(int argc, char** argv)

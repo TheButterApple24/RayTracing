@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Walnut/Image.h"
-#include <glm/glm.hpp>
 
 #include <memory>
+#include <glm/glm.hpp>
 
 class Renderer
 {
@@ -12,15 +12,16 @@ public:
 
 	void OnResize(uint32_t width, uint32_t height);
 	void Render();
+	void SetLightDirection(glm::vec3 lightDir) { m_LightDirection = lightDir; }
+	glm::vec3 GetLightDirection() { return m_LightDirection; }
 
-	std::shared_ptr<Walnut::Image> GetFinalImage() { return m_FinalImage; }
-
+	std::shared_ptr<Walnut::Image> GetFinalImage() const { return m_FinalImage; }
 private:
-	uint32_t PerPixel(glm::vec2 coord);
+	glm::vec4 PerPixel(glm::vec2 coord);
 private:
 	std::shared_ptr<Walnut::Image> m_FinalImage;
 	uint32_t* m_ImageData = nullptr;
 
-	glm::vec3 CameraOrigin = glm::vec3(0.0f);
+	// TEMP VARIABLES
+	glm::vec3 m_LightDirection = glm::vec3(-1.0f);
 };
-
